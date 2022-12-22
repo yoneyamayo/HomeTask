@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+course .img{
+	width:50px;
+}
+
+.border {
+	border-radius: 30px;
+      border: 1px solid #4c6cb3 !important;
+      
+}

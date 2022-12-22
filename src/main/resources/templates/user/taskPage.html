@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<p>参考ファイル：[[${task.name}]]</p>
+	<span th:if="${task.fileName1}"><th:block
+			th:if="${#strings.startsWith(task.fileType1,'image/')}">
+			<img th:src="@{/gallery/{img}(img=${task.fileName1})}" width="400">
+		</th:block> <th:block th:unless="${#strings.startsWith(task.fileType1,'image/')}">
+			<a th:href="@{/gallery/{img}(img=${task.fileName1})}">●見本1</a>
+		</th:block></span>
+
+	<span th:if="${task.fileName2}"><th:block
+			th:if="${#strings.startsWith(task.fileType2,'image/')}">
+			<img th:src="@{/gallery/{img}(img=${task.fileName2})}" width="400">
+		</th:block> <th:block th:unless="${#strings.startsWith(task.fileType2,'image/')}">
+			<br><br>
+			<a th:href="@{/gallery/{img}(img=${task.fileName2})}">●見本2</a>
+		</th:block></span>
+
+	<span th:if="${task.fileName3}"><th:block
+			th:if="${#strings.startsWith(task.fileType3,'image/')}">
+			<img th:src="@{/gallery/{img}(img=${task.fileName3})}" width="400">
+		</th:block> <th:block th:unless="${#strings.startsWith(task.fileType3,'image/')}">
+			<br><br>
+			<a th:href="@{/gallery/{img}(img=${task.fileName3})}">●見本3　</a>
+		</th:block>
+
+</body>
+</html>

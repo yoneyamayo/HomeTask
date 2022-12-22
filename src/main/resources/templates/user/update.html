@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>登録情報の変更</title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+
+	<div class="counttainer text-center">
+		<h1 class="my-4">登録情報の変更</h1>
+	
+	<form action="" method="post" th:object="${user}">
+
+		<span th:errors="*{name}" class="error"></span>
+		<p class="mt-2">
+			登録名：<input type="text" th:field="*{name}"></p>
+			
+		<span th:errors="*{mail}" class="error"></span>
+		<p class="mt-2">
+			メール：<input type="email" th:field="*{mail}">	</p>
+			
+		<span th:errors="*{pass}" class="error"></span>
+		<p class="mt-2">
+			パスワード：<input type="password" th:field="*{pass}"></p>
+
+<a class="btn btn-outline-primary" th:href="@{/user/mypage}">Mypage</a>
+	<input type="submit" class="btn btn-primary">
+	<a class="btn btn-danger" th:href="@{/user/delete/{id}(id=${session.id})}">削除</a>
+	</form>
+	
+	
+	</div>
+
+</body>
+</html>

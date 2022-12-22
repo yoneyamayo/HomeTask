@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>コース追加</title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
+</head>
+<body>
+	<div class="countainer ml-4 mt-4">
+
+		<h1>コース追加</h1>
+
+		<form action="" method="post" th:object="${course}"
+			enctype="multipart/form-data" id="form">
+			<p>
+				カテゴリ：<select th:field="*{categoryId}" id="courseCategory">
+					<option value="0">カテゴリを選択</option>
+					<option value="1">美術</option>
+					<option value="2">音楽</option>
+					<option value="3">書道</option>
+					<option value="4">運動</option>
+					<option value="5">勉強</option>
+					<option value="6">その他</option>
+				</select>
+			</p>
+
+			<span th:errors="*{name}" class="error"></span>
+			<p class="mt-2">
+				教室名：<input type="text" th:field="*{name}">
+			</p>
+
+			<p>
+				回数：<select th:field="*{taskTime}" id="taskTime">
+					<option value="0">回数を選択</option>
+					<option value="1">1</option>
+					<option value="2">3</option>
+					<option value="3">5</option>
+					<option value="4">10</option>
+					<option value="5">15</option>
+					<option value="6">20</option>
+				</select>
+			</p>
+
+			<span th:errors="*{price}" class="error"></span>
+			<p class="mt-2">
+				金額：<input type="text" th:field="*{price}">
+			</p>
+
+			<span th:errors="*{summary}" class="error"></span>
+			<p class="mt-2">
+				概要：<input type="text" th:field="*{summary}">
+			</p>
+
+			<span th:errors="*{upfile}" class="error"></span>
+			<p class="mt-2">
+				参考画像：<input type="file" th:field="*{upfile}" id="upfile">
+			</p>
+
+			<span class="mt-4">
+				 <a class="btn btn-outline-primary" role="button" th:href="@{/teacher/mypage}">Mypage</a>
+			</span>
+			<input type="submit" class="btn btn-primary">
+
+
+		</form>
+	</div>
+	<script>
+		const MAX_FILE_SIZE = 10000000; // 10MB
+		const form = document.getElementById('form');
+		const upfile = document.getElementById('upfile');
+		form.addEventListener('submit', (event) => {
+ 		const file = upfile.files[0];
+		 if(file != undefined && file.size >= MAX_FILE_SIZE) {
+ 	
+		// 送信しない
+ 		event.preventDefault();
+		
+ 		// エラーメッセージを含む span 要素を生成
+ 		const errorElement = document.createElement('span');
+		 errorElement.classList.add('error');
+ 		errorElement.textContent = 'ファイルサイズが大き過ぎます';
+ 		
+ 		// input タグの親要素(p 要素)の前にメッセージを出力
+ 		upfile.parentNode.before(errorElement);
+ 		}
+		});
+	</script>
+
+</body>
+</html>
+
+
+<!-- 
+タイトル
+カテゴリID
+回数
+金額
+概要
+写真
+タスク追加リンク
+
+ -->

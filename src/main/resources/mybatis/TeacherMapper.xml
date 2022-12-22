@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.TeacherMapper">
+
+	<!-- Teacher -->
+	<!-- Teacher全選択 -->
+	<select id="selectAllTeachers" resultType="Teacher">
+		SELECT * FROM teachers
+	</select>
+
+	<!-- Teacher一人分をidを元に選択 -->
+	<select id="selectById" parameterType="int" resultType="Teacher">
+		SELECT *
+		FROM teachers
+		WHERE teachers.id = #{id}
+	</select>
+
+	<!-- Teacher一人分をMailを元に選択 -->
+	<select id="selectByMail" resultType="Teacher">
+		SELECT * FROM teachers
+		WHERE teachers.mail = #{mail}
+	</select>
+
+	<!-- Teacher新規登録 -->
+	<insert id="insert" parameterType="Teacher">
+		INSERT INTO teachers (name,
+		mail, pass, created)
+		VALUES(#{name}, #{mail}, #{pass}, NOW())
+	</insert>
+
+	<!-- Teacher更新 -->
+	<update id="update">
+		UPDATE teachers
+		SET name = #{name}, mail = #{mail},
+		pass = #{pass}
+		WHERE id = #{id}
+	</update>
+
+	<!-- Teacher削除(使うかは検討) -->
+	<delete id="delete">
+		DELETE FROM teachers WHERE id = #{id}
+	</delete>
+
+	<!-- Course -->
+	<!-- Course追加登録 -->
+	<insert id="insertCourse" parameterType="Course">
+		INSERT INTO course
+		(name, category_id, task_time, price, summary, image_name, teacher_id)
+		VALUES( #{name}, #{categoryId}, #{taskTime}, #{price}, #{summary},
+		#{imageName}, #{teacherId})
+	</insert>
+
+	<!-- Course 登録されているコースをteacher_idを元に選択 -->
+	<!-- コースカテゴリーのテーブルとJOIN＋nameを変更する。 -->
+	<select id="selectCourseByTeacherId" parameterType="int"
+		resultType="Course">
+		SELECT *, course_category.name as category_name FROM course
+		JOIN course_category
+		ON course.category_id = course_category.id
+		WHERE
+		teacher_id = #{id}
+	</select>
+
+	<!-- Course コース詳細をcourse_idを元に選択 -->
+	<select id="selectCourseDetailByCourseId" parameterType="int"
+		resultType="Course">
+		SELECT *, course_category.name as category_name FROM course
+		JOIN course_category
+		ON course.category_id = course_category.id
+		WHERE
+		course.id = #{id}
+	</select>
+
+	<!-- Course コースの編集 -->
+	<update id="updateCourse" parameterType="Course">
+		UPDATE course
+		SET name =
+		#{name}, category_id = #{categoryId},
+		task_time = #{taskTime}, price =
+		#{price},
+		summary = #{summary},image_name = #{imageName}, teacher_id =
+		#{teacherId}
+		WHERE id = #{id}
+	</update>
+
+	<!-- Course コースの削除 -->
+	<delete id="deleteCourse" parameterType="int">
+		DELETE FROM course WHERE
+		id = #{id}
+	</delete>
+
+	<!-- <Task> -->
+	<!-- Task追加登録 -->
+	<insert id="insertTask" parameterType="Task">
+		INSERT INTO task
+		(course_id, name, summary, image_name, file_name1, file_type1,
+		file_name2, file_type2, file_name3, file_type3)
+		VALUES (#{courseId},
+		#{name}, #{summary}, #{imageName}, #{fileName1}, #{fileType1},
+		#{fileName2}, #{fileType2}, #{fileName3}, #{fileType3})
+	</insert>
+
+	<!-- Task 登録されているタスクをcourse_idを元に選択 -->
+	<select id="selectTaskByCourseId" parameterType="int"
+		resultType="Task">
+		SELECT * FROM task
+		WHERE course_id = #{id}
+	</select>
+
+	<!-- Task コースごとのタスク数を取得 -->
+	<select id="selectCountTaskByCourseId" parameterType="int"
+		resultType="int">
+		SELECT COUNT(*) FROM task
+		WHERE course_id = #{id}
+	</select>
+
+	<!-- Task course_idとtask_idを元に全ユーザーのタスクアップロードを表示する -->
+	<select id="selectUserTaskByTaskId" parameterType="int"
+		resultType="TaskUpload">
+		SELECT * , users.name AS userName, task.course_id AS courseId
+		FROM task_upload
+		JOIN task
+		ON task_upload.task_id = task.id
+		JOIN users
+		ON task_upload.user_id = users.id
+		WHERE task_upload.task_id = #{id} ;
+	</select>
+
+</mapper>

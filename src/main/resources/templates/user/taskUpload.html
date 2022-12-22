@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<title>タスク提出</title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
+</head>
+<body>
+
+
+	<div class="container text-center mt-2">
+
+		<form action="" method="post" th:object="${taskUpload}"
+			enctype="multipart/form-data" id="form">
+
+			<h2 class="mt-2">タスク:[[${taskUpload.taskName}]]</h2>
+			<br>
+			<span th:errors="*{upfile}" class="error"></span>
+			<p class="h2 mt-2">
+				タスク提出</p>
+				<p><input type="file" th:field="*{upfile}" id="upfile">
+			</p>
+
+			<input type="submit" class="btn btn-primary">
+			<a class="btn btn-outline-primary" th:href="@{/user/coursePage/{id}(id=*{courseId})}">
+			Back to Course</a>
+
+		</form>
+
+	</div>
+</body>
+</html>

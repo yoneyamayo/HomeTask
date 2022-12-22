@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
+<meta charset="UTF-8">
+<title>Course Page</title>
+</head>
+<body>
+	<div class="container mt-2 col-11">
+	
+		<span class="h2 text-danger">
+			Teacher:CoursePage
+		</span>
+			<a class="mb-1 btn btn-sm btn-outline-danger" th:href="@{/teacher/mypage}">
+				Back to MyPage </a>
+	
+	<h1 class="mt-2">[[${courseList.name}]]</h1>
+
+		<div class="course">
+			<table class="table">
+				<thead>
+
+					<tr>
+						<th>画像</th>
+						<th>教室</th>
+						<th>カテゴリ</th>
+						<th>タスク</th>
+						<th>金額</th>
+						<th>概要</th>
+
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="course : ${courseList}">
+						<td th:if="${course.imageName}"><img
+							th:src="@{/gallery/{img}(img=${course.imageName})}" width="150"></td>
+						<td>[[${course.name}]]</td>
+						<td>[[${course.categoryName}]]</td>
+						<td>[[${course.taskTime}]]回</td>
+						<td>[[${course.price}]]円</td>
+						<td>[[${course.summary}]]</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<a class="mt-4 btn btn-danger"
+			th:href="@{/teacher/updateCourse/{id}(id=${courseList.id})}">
+			コース編集 </a> <span class="mt-4 btn btn-outline-primary"
+			th:if="${countTask < courseList.taskTime}"> <a
+			th:href="@{/teacher/addTask/{id}(id=${courseList.id})}"> タスクを追加 </a></span>
+		<span class="mt-4 btn btn-secondary"
+			th:unless="${countTask < courseList.taskTime}"> タスク追加済み </span>
+
+		<div class="course mt-2">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>タスク名　　</th>
+						<th>トップ画像</th>
+						<th>概要　　　　　　</th>
+						<th>提出　　</th>
+						<th>見本1</th>
+						<th>見本2</th>
+						<th>見本3</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="task : ${taskList}">
+
+						<td>[[${task.name}]]</td>
+						<td th:if="${task.imageName}"><img
+							th:src="@{/gallery/{img}(img=${task.imageName})}" width="200"></td>
+						<td>[[${task.summary}]]</td>
+
+						<td><a th:href="@{/teacher/allUserTask/{id}(id=${task.id})}">提出物</a>
+						</td>
+
+						<td th:if="${task.fileName1}"><th:block
+								th:if="${#strings.startsWith(task.fileType1,'image/')}">
+								<img th:src="@{/gallery/{img}(img=${task.fileName1})}"
+									width="130">
+							</th:block> <th:block
+								th:unless="${#strings.startsWith(task.fileType1,'image/')}">
+								<a th:href="@{/gallery/{img}(img=${task.fileName1})}">ファイル1</a>
+							</th:block></td>
+
+						<td th:if="${task.fileName2}"><th:block
+								th:if="${#strings.startsWith(task.fileType2,'image/')}">
+								<img th:src="@{/gallery/{img}(img=${task.fileName2})}"
+									width="130">
+							</th:block> <th:block
+								th:unless="${#strings.startsWith(task.fileType2,'image/')}">
+								<a th:href="@{/gallery/{img}(img=${task.fileName2})}">ファイル2</a>
+							</th:block></td>
+
+						<td th:if="${task.fileName3}"><th:block
+								th:if="${#strings.startsWith(task.fileType3,'image/')}">
+								<img th:src="@{/gallery/{img}(img=${task.fileName3})}"
+									width="130">
+							</th:block> <th:block
+								th:unless="${#strings.startsWith(task.fileType3,'image/')}">
+								<a th:href="@{/gallery/{img}(img=${task.fileName3})}">ファイル3</a>
+							</th:block></td>
+							
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

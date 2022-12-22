@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<title>タスク追加</title>
+</head>
+	<div class="countainer">
+	 <h1>[[${course.name}]]</h1>
+
+		<form action="" method="post" th:object="${task}"
+			enctype="multipart/form-data" id="form">
+		
+			<span th:errors="*{name}" class="error"></span>
+			<p class="mt-2">
+				タスク名：<input type="text" th:field="*{name}">
+			</p>
+
+			<span th:errors="*{summary}" class="error"></span>
+			<p class="mt-2">
+				概要：<input type="text" th:field="*{summary}">
+			</p>
+
+			<span th:errors="*{topfile}" class="error"></span>
+			<p class="mt-2">
+				TOP画像：<input type="file" th:field="*{topfile}" id="topfile">
+			</p>
+
+
+			<span th:errors="*{subfile1}" class="error"></span>
+			<p class="mt-2">
+				参考ファイル1：<input type="file" th:field="*{subfile1}" id="subfile1">
+			</p>
+			
+			<span th:errors="*{subfile2}" class="error"></span>
+			<p class="mt-2">
+				参考ファイル2：<input type="file" th:field="*{subfile2}" id="subfile2">
+			</p>
+			
+			<span th:errors="*{subfile3}" class="error"></span>
+			<p class="mt-2">
+				参考ファイル3：<input type="file" th:field="*{subfile3}" id="subfile3">
+			</p>
+			
+			
+
+			<input type="submit" class="btn btn-primary">
+
+			<p class="mt-4">
+				<a th:href="@{/teacher/course/{id}(id=${course.id})}">Course</a>
+			</p>
+
+		</form>
+	</div>
+	<script>
+		const MAX_FILE_SIZE = 10000000; // 10MB
+		const form = document.getElementById('form');
+		const upfile = document.getElementById('upfile');
+		form.addEventListener('submit', (event) => {
+ 		const file = upfile.files[0];
+		 if(file != undefined && file.size >= MAX_FILE_SIZE) {
+ 	
+		// 送信しない
+ 		event.preventDefault();
+		
+ 		// エラーメッセージを含む span 要素を生成
+ 		const errorElement = document.createElement('span');
+		 errorElement.classList.add('error');
+ 		errorElement.textContent = 'ファイルサイズが大き過ぎます';
+ 		
+ 		// input タグの親要素(p 要素)の前にメッセージを出力
+ 		upfile.parentNode.before(errorElement);
+ 		}
+		});
+	</script>
+
+</body>
+</html>

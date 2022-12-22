@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.UserMapper">
+
+	<!-- User全選択 -->
+	<select id="selectAllUsers" resultType="User">
+		SELECT * FROM users
+	</select>
+
+	<!-- User一人分をidを元に選択 -->
+	<select id="selectById" parameterType="int" resultType="User">
+		SELECT *
+		FROM users
+		WHERE users.id = #{id}
+	</select>
+
+	<!-- User一人分をMailを元に選択 -->
+	<select id="selectByMail" resultType="User">
+		SELECT * FROM users
+		WHERE
+		users.mail = #{mail}
+	</select>
+
+	<!-- User新規登録 -->
+	<insert id="insert" parameterType="User">
+		INSERT INTO users (name, mail, pass, created)
+		VALUES (#{name}, #{mail}, #{pass}, NOW())
+	</insert>
+
+	<!-- User更新 -->
+	<update id="update" parameterType="int">
+		UPDATE users
+		SET name = #{name}, mail = #{mail}, pass
+		= #{pass}
+		WHERE id = #{id}
+	</update>
+
+	<!-- User削除(使うかは検討) -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM users WHERE id = #{id}
+	</delete>
+
+	<!-- Course コース全リストをuse_idをもとに取得 -->
+	<select id="selectAllCourse" resultType="Course"  parameterType="int">
+		SELECT *, course_category.name AS category_name,
+		A.id AS entry_id
+		FROM course
+        JOIN course_category
+		ON course.category_id = course_category.id
+		LEFT JOIN (SELECT * FROM course_entry
+        WHERE user_id = #{id}) AS A
+		ON course.id = A.course_id;
+	</select>
+
+	<!-- Course コース全リストをuser_idを元に選択 -->
+	<select id="selectCourseByUserId" parameterType="int"
+		resultType="Course">
+		SELECT *, course_category.name as category_name FROM course
+		JOIN course_entry
+		ON course.id = course_entry.course_id
+		JOIN
+		course_category
+		ON course.category_id = course_category.id
+		WHERE user_id
+		= #{id};
+	</select>
+
+	<!-- Course コースに応募する -->
+	<insert id="insertEntryCourse" parameterType="User">
+		INSERT INTO
+		course_entry (course_id,user_id,entry_day)
+		VALUES(#{courseId},#{userId}, NOW());
+	</insert>
+
+	<!-- Course 登録コース詳細をcourse_idを元に選択 -->
+	<select id="selectUserCoursePageByCourseId" parameterType="int"
+		resultType="Course">
+		SELECT *, course_category.name as category_name FROM course
+		JOIN course_category
+		ON course.category_id = course_category.id
+		WHERE
+		course.id = #{id}
+	</select>
+	
+	 <!-- Course ??タスクの数をカテゴリごとに出す 
+	<select id="" parameterType="int"
+		resultType="int">	
+		SELECT category_id,course_entry.user_id,
+		COUNT(*) FROM task_upload
+		JOIN course_entry
+		ON task_upload.user_id = course_entry.user_id
+		JOIN course
+		ON  course_entry.course_id = course.id
+		WHERE task_upload.user_id = 1
+ 		GROUP BY category_id;
+ 	</select> -->
+ 	
+ 	<!-- Course ユーザーのこなしたタスクの数をカテゴリごとに出す -->
+	<select id="selectUploadCourseCategoryByUserId" parameterType="int"
+		resultType="TaskUpload">	
+ 		 SELECT course_category.id, course_category.name AS category_name,
+		A.category_count FROM course_category
+		LEFT JOIN (SELECT course.category_id,COUNT(*) AS category_count
+		FROM task_upload
+		JOIN task
+		ON task_upload.task_id = task.id
+		JOIN course
+        ON task.course_id = course.id
+		WHERE user_id = #{id}
+		GROUP BY course.category_id) AS A
+		ON course_category.id = A.category_id;
+ 	</select>
+	
+		<!-- Task タスクをcourse_idとuser_idを元に表示する -->
+	<select id="selectUserTaskListByCourseId" parameterType="int"
+		resultType="Task">
+		SELECT * FROM task
+		WHERE course_id = #{id}
+	</select>
+	
+
+	<!-- Task タスク詳細をtask_idをもとに表示 -->
+	<select id="selectUserTaskDetailByTaskId" parameterType="int"
+		resultType="Task">
+		SELECT *,task.name AS task_name, course.id AS course_id
+		FROM task
+		JOIN course
+		ON task.course_id = course.id
+		WHERE task.id =
+		#{id};
+	</select>
+
+	<!-- Task タスク詳細をtask_idをもとに表示 -->
+	<select id="selectTaskUploadPageByTaskId" parameterType="int"
+		resultType="TaskUpload">
+		SELECT *,task.name AS task_name, course.id AS course_id
+		FROM task
+		JOIN course
+		ON task.course_id = course.id
+		WHERE task.id =
+		#{id};
+	</select>
+
+	<!-- Task タスクをアップロード（課題提出）する -->
+	<insert id="insertTaskUpload" parameterType="TaskUpload">
+		INSERT INTO
+		task_upload
+		(user_id, task_id, file_name, file_type)
+		VALUES
+		(#{userId},#{taskId},#{fileName}, #{fileType});
+	</insert>
+
+	<!-- Task course_idとtask_idを元に全ユーザーのタスクアップロードを表示する -->
+	<select id="selectAllUserUploadByTaskId" parameterType="int"
+		resultType="TaskUpload">
+		SELECT * , users.name AS userName, task.course_id AS courseId
+		FROM task_upload
+		JOIN task
+		ON task_upload.task_id = task.id
+		JOIN users
+		ON task_upload.user_id = users.id
+		WHERE task_upload.task_id = #{id} ;
+	</select>
+
+	<!-- あるユーザーが応募しているコースの総タスク数 -->
+	<select id="selectSumTaskTimeByUserId" parameterType="int"	resultType="int">
+		SELECT SUM(task_time) FROM course_entry
+		JOIN course
+		ON course_entry.course_id = course.id
+		WHERE course_entry.user_id = #{id};
+	</select>
+
+	<!-- Task あるユーザーが提出している総タスク数　-->
+	<select id="selectTaskUploadCountByUserId" parameterType="int" resultType="int">
+	SELECT COUNT(*) FROM task_upload WHERE task_upload.user_id = #{id};
+	</select>
+
+</mapper>

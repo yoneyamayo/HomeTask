@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Course Page</title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+	<div class="container mt-2 col-9">
+		<span class="h2 text-primary">User:Course Page
+		</span>
+		<a class="mb-1 btn btn-sm btn-outline-primary" th:href="@{/user/mypage}">
+			Back to MyPage</a>
+			
+		<h1 class="mt-2">[[${course.name}]]</h1>
+
+		<div class="course">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>画像</th>
+						<th>教室</th>
+						<th>カテゴリ</th>
+						<th>タスク</th>
+						<th>金額</th>
+						<th>概要</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="course : ${course}">
+						<td th:if="${course.imageName}"><img
+							th:src="@{/gallery/{img}(img=${course.imageName})}" width="150"></td>
+						<td>[[${course.name}]]</td>
+						<td>[[${course.categoryName}]]</td>
+						<td>[[${course.taskTime}]]回</td>
+						<td>[[${course.price}]]円</td>
+						<td>[[${course.summary}]]</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="course">
+			<table class="table">
+				<thead class="-secondary">
+					<tr>
+
+						<th>タスク名</th>
+						<th>トップ画像　</th>
+						<th>概要</th>
+						<th>参考資料　</th>
+						<th>課題提出　</th>
+						<th>提出リスト　　</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="task : ${taskList}">
+
+						<td>[[${task.name}]]</td>
+						<td th:if="${task.imageName}"><img
+							th:src="@{/gallery/{img}(img=${task.imageName})}" width="200"></td>
+						<td>[[${task.summary}]]</td>
+
+
+						<td><a th:href="@{/user/taskPage/{id}(id=${task.id})}">見本</a>
+						</td>
+
+						<td><a th:href="@{/user/taskUpload/{id}(id=${task.id})}">提出</a>
+						</td>
+
+						<td><a th:href="@{/user/allUserTask/{id}(id=${task.id})}">提出リスト</a>
+						</td>
+
+
+
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</body>
+</html>
